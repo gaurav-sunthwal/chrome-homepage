@@ -1,101 +1,84 @@
+"use client";
+import { Box, Text } from "@chakra-ui/react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import Search from "./HomeComponents/Search";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [bgImg, setBgImg] = useState<string>("");
+  const [currentTime, setCurrentTime] = useState<string>("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+  const getDayName = (date: Date) => {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    return days[date.getDay()];
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const date = new Date();
+      setCurrentTime(date.toLocaleString());
+    }, 60000);
+
+    // Set initial time
+    const initialDate = new Date();
+    setCurrentTime(initialDate.toLocaleString());
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="relative h-screen w-full flex items-center justify-start overflow-hidden px-8 md:px-16">
+      {/* Background Image */}
+      <Image
+        src={
+          "https://pixabay.com/get/g77678a860e842c9df7cc93d9b8f9b571146f9f372ec2189db8f0aa87b30601516c4cfd5bddac6a683420e3909b55f60c7eaef801f6d072c7632d35580bbeb760_1280.jpg"
+        }
+        alt="Background"
+        layout="fill"
+        objectFit="cover"
+        className="absolute top-0 left-0 w-full h-full z-0"
+      />
+      {/* Dark Overlay */}
+      <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50 z-10"></div>
+      <Box
+        position={"absolute"}
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        zIndex={20}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        color="white"
+      >
+        <Box
+          position="absolute"
+          top={8}
+          right={8}
+          color="white"
+          fontSize="lg"
+          fontWeight="bold"
+          zIndex={10}
+          textAlign="right"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <Text>{getDayName(new Date())}</Text>
+          <Text>{currentTime}</Text>
+          
+        </Box>
+        <Box position={"absolute"} top={0} zIndex={30}>
+            <Search />
+          </Box>
+      </Box>
     </div>
   );
 }
